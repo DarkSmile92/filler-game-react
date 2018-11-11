@@ -19,3 +19,8 @@ If there are more than one equal possibillities, only the first is taken into co
 ### Solving algorhythm
 At the moment there is no algorhythm to take steps automatically.
 Take on the challenge, create solvers under the `./src/solver/` path and share them!
+
+### Debugging with Visual Studio Code
+First install the extension [Chrome Debugger](https://marketplace.visualstudio.com/items?itemName=msjsdiag.debugger-for-chrome) to your VSCode instance.
+
+Run `yarn start` in your terminal, set your breakpoints in VSCode and press `F5` to start debugging.
