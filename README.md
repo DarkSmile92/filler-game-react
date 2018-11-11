@@ -10,6 +10,9 @@ yarn
 yarn start
 ```
 
+### Demo
+Visit https://darksmile92.github.io/fillter-game-react/ for a demo.
+
 ### Tweaks
 #### Suggestions
 Right now the game finds the best next step simply by calculating the max number of cells possibly to acquire with each color and using the max value as suggestion.
