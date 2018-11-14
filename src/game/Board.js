@@ -12,6 +12,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import { CellSize, Colors, Player1, Player2 } from './constants';
 import Cell from './cell';
 import GameCell from './GameCell';
+import { codeBlock } from 'common-tags';
 
 const buildStat = pct => (
   <Statistic horizontal inverted size="mini">
@@ -51,9 +52,10 @@ export default class Board extends React.Component {
     return randColor;
   };
 
-  reset = () => {
+  reset = (width, height) => {
     const emptyCol = { name: 'empty', hex: '0' };
     this.setState({
+      cells: [],
       currentColorP1: emptyCol,
       currentColorP2: emptyCol,
       currentPlayer: Player1,
@@ -62,20 +64,18 @@ export default class Board extends React.Component {
       nextMove: { hex: '0', cnt: 0 },
       won: false,
       wonName: '',
-    });
+    }, () => this.generateGrid(width, height));
   };
 
   startGame = (width, height) => {
-    this.cells = [];
-    this.reset();
-    this.generateGrid(width, height);
+    this.reset(width, height);
   };
 
   generateGrid = (width, height) => {
     for (let yIdx = 0; yIdx <= height; yIdx++) {
       for (let xIdx = 0; xIdx <= width; xIdx++) {
-        if (typeof this.cells[yIdx] === 'undefined') {
-          this.cells[yIdx] = [];
+        if (typeof this.state.cells[yIdx] === 'undefined') {
+          this.state.cells[yIdx] = [];
         }
         const color = this.randomColor();
         if (yIdx === 0 && xIdx === 0) {
@@ -97,7 +97,7 @@ export default class Board extends React.Component {
             ? Player2
             : ''
         );
-        this.cells[yIdx][xIdx] = newCell;
+        this.state.cells[yIdx][xIdx] = newCell;
       }
     }
   };
@@ -112,7 +112,7 @@ export default class Board extends React.Component {
       // fill already owned first
       for (let yIdx = 0; yIdx <= this.props.height; yIdx++) {
         for (let xIdx = 0; xIdx <= this.props.width; xIdx++) {
-          if (this.cells[yIdx][xIdx].isOwnedBy(player)) {
+          if (this.state.cells[yIdx][xIdx].isOwnedBy(player)) {
             alreadyOwned.push({ x: xIdx, y: yIdx });
           }
         }
@@ -171,7 +171,7 @@ export default class Board extends React.Component {
     let ocs = 0;
     for (let yIdx = 0; yIdx <= this.props.height; yIdx++) {
       for (let xIdx = 0; xIdx <= this.props.width; xIdx++) {
-        if (this.cells[yIdx][xIdx].isOwnedBy(player)) {
+        if (this.state.cells[yIdx][xIdx].isOwnedBy(player)) {
           ocs++;
         }
       }
@@ -192,7 +192,7 @@ export default class Board extends React.Component {
     const changes = this.findNewCells(newColor, currentPlayer, []);
     let countNewAcquired = 0;
     for (const coord of changes) {
-      const cell = this.cells[coord.y][coord.x];
+      const cell = this.state.cells[coord.y][coord.x];
       if (!cell.isOwnedBy(currentPlayer)) {
         countNewAcquired++;
       }
@@ -235,7 +235,7 @@ export default class Board extends React.Component {
       if (player === Player1) {
         for (let yIdx = 0; yIdx <= this.props.height; yIdx++) {
           for (let xIdx = 0; xIdx <= this.props.width; xIdx++) {
-            const cell = this.cells[yIdx][xIdx];
+            const cell = this.state.cells[yIdx][xIdx];
             // base cell, always change
             if (yIdx === 0 && xIdx === 0) {
               alreadyFound.push({ x: xIdx, y: yIdx });
@@ -269,7 +269,7 @@ export default class Board extends React.Component {
       } else {
         for (let yIdx = this.props.height; yIdx >= 0; yIdx--) {
           for (let xIdx = this.props.width; xIdx >= 0; xIdx--) {
-            const cell = this.cells[yIdx][xIdx];
+            const cell = this.state.cells[yIdx][xIdx];
             // base cell, always change
             if (yIdx === this.props.height && xIdx === this.props.width) {
               alreadyFound.push({ x: xIdx, y: yIdx });
@@ -309,7 +309,7 @@ export default class Board extends React.Component {
   };
 
   cellIsConnectedNeighbor = (x, y, newColor, changes, currentPlayer) => {
-    const theCell = this.cells[y][x];
+    const theCell = this.state.cells[y][x];
     if (theCell.color.hex !== newColor.hex) {
       return false;
     }
@@ -317,7 +317,7 @@ export default class Board extends React.Component {
     if (x - 1 >= 0) {
       const checkY = y;
       const checkX = x - 1;
-      const checkCell = this.cells[checkY][checkX];
+      const checkCell = this.state.cells[checkY][checkX];
       // console.log(`N-LEFT: Checking ${checkCell.displayName()}`);
       if (
         checkCell.isOwnedBy(currentPlayer) ||
@@ -331,7 +331,7 @@ export default class Board extends React.Component {
     if (x + 1 <= this.props.width) {
       const checkY = y;
       const checkX = x + 1;
-      const checkCell = this.cells[checkY][checkX];
+      const checkCell = this.state.cells[checkY][checkX];
       // console.log(`N-RIGHT: Checking ${checkCell.displayName()}`);
       if (
         checkCell.isOwnedBy(currentPlayer) ||
@@ -345,7 +345,7 @@ export default class Board extends React.Component {
     if (y - 1 >= 0) {
       const checkY = y - 1;
       const checkX = x;
-      const checkCell = this.cells[checkY][checkX];
+      const checkCell = this.state.cells[checkY][checkX];
       // console.log(`N-TOP: Checking ${checkCell.displayName()}`);
       if (
         checkCell.isOwnedBy(currentPlayer) ||
@@ -359,7 +359,7 @@ export default class Board extends React.Component {
     if (y + 1 <= this.props.height) {
       const checkY = y + 1;
       const checkX = x;
-      const checkCell = this.cells[checkY][checkX];
+      const checkCell = this.state.cells[checkY][checkX];
       // console.log(`N-BOTTOM: Checking ${checkCell.displayName()}`);
       if (
         checkCell.isOwnedBy(currentPlayer) ||
@@ -401,13 +401,27 @@ export default class Board extends React.Component {
 
   renderGrid = () => {
     const rows = [];
-    if (!this.cells || this.cells.length === 0) {
+    if (!this.state.cells || this.state.cells.length === 0) {
       return rows;
     }
+
+    // return this.state.cells ? this.state.cells.map((yc, idx) => {
+    //   return (<tr key={`y_${idx}`}>{yc.map(xc => (<td key={`x_${xc.X}`}>
+    //   <Cell
+    //     {...this.props}
+    //     cell={xc}
+    //     YMax={this.props.height}
+    //     XMax={this.props.width}
+    //     ownerDisplay={this.state.displayOwner}
+    //   />
+    // </td>)
+    //     )}</tr>);
+    // }) : [];
+
     for (let yIdx = 0; yIdx <= this.props.height; yIdx++) {
       const columns = [];
       for (let xIdx = 0; xIdx <= this.props.width; xIdx++) {
-        const cell = this.cells[yIdx][xIdx];
+        const cell = this.state.cells[yIdx][xIdx];
         columns.push(
           <td key={`x_${xIdx}`}>
             <Cell
