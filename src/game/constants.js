@@ -8,3 +8,5 @@ export const Colors = [
   { name: 'blue', hex: '#103DF3' },
   { name: 'purple', hex: '#F310D4' },
 ];
+export const Player1 = 'p1';
+export const Player2 = 'p2';
