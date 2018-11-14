@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/3.6.3/workbox-sw.js");
 
 importScripts(
-  "/filler-game-react/precache-manifest.a014e61c9fc6642045c4a8ba966556bf.js"
+  "/fillter-game-react/precache-manifest.e2e339f99570ce58c6772010017e41e6.js"
 );
 
 workbox.clientsClaim();
@@ -28,7 +28,7 @@ self.__precacheManifest = [].concat(self.__precacheManifest || []);
 workbox.precaching.suppressWarnings();
 workbox.precaching.precacheAndRoute(self.__precacheManifest, {});
 
-workbox.routing.registerNavigationRoute("/filler-game-react/index.html", {
+workbox.routing.registerNavigationRoute("/fillter-game-react/index.html", {
   
   blacklist: [/^\/_/,/\/[^\/]+\.[^\/]+$/],
 });
