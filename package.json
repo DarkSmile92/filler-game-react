@@ -5,10 +5,10 @@
   "private": true,
   "repository": {
     "type": "git",
-    "url": "https://github.com/DarkSmile92/fillter-game-react"
+    "url": "https://github.com/DarkSmile92/filler-game-react"
   },
   "author": "Robin <> (https://github.com/DarkSmile92)",
-  "homepage": "https://darksmile92.github.io/fillter-game-react/",
+  "homepage": "https://darksmile92.github.io/filler-game-react/",
   "dependencies": {
     "react": "^16.6.1",
     "react-dom": "^16.6.1",

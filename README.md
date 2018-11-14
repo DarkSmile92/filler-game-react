@@ -4,14 +4,14 @@
 Run the following commands in the terminal of your choice:
 
 ```
-git clone https://github.com/DarkSmile92/fillter-game-react.git filler-game-react
+git clone https://github.com/DarkSmile92/filler-game-react.git filler-game-react
 cd filler-game-react
 yarn
 yarn start
 ```
 
 ### Demo
-Visit https://darksmile92.github.io/fillter-game-react/ for a demo.
+Visit https://darksmile92.github.io/filler-game-react/ for a demo.
 
 ### Tweaks
 #### Suggestions
