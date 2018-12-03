@@ -1,6 +1,7 @@
 import React from 'react';
-import { Icon } from 'semantic-ui-react';
-import { CellSize, Player1, Player2 } from './constants';
+import {Icon} from 'semantic-ui-react';
+import {CellSize, Player1, Player2} from './constants';
+import {hexToRgbA} from '../helpers';
 
 export default class Cell extends React.Component {
   constructor(props) {
@@ -18,10 +19,7 @@ export default class Cell extends React.Component {
   };
 
   calcBorderSize = () => {
-    if (
-      this.state.cell.isCurrentCell(0, 0) ||
-      this.state.cell.isCurrentCell(this.state.xmax, this.state.ymax)
-    ) {
+    if (this.state.cell.isCurrentCell(0, 0) || this.state.cell.isCurrentCell(this.state.xmax, this.state.ymax)) {
       return '3px';
     }
     return '1px';
@@ -41,7 +39,7 @@ export default class Cell extends React.Component {
     const borderSize = this.calcBorderSize();
     const borderColor = this.calcBorderColor();
     let icon = <span />;
-    const iconStyle = { fontSize: '50%' };
+    const iconStyle = {fontSize: '50%'};
 
     if (this.state.cell) {
       switch (this.state.cell.owner) {
@@ -54,11 +52,14 @@ export default class Cell extends React.Component {
       }
     }
 
+    const rgbaCol = hexToRgbA(this.state.cell.color.hex);
+
     return (
       <div
         className="cell"
         style={{
-          backgroundColor: this.state.cell.color.hex,
+          // backgroundColor: this.state.cell.color.hex,
+          background: `linear-gradient(141deg, #2c3340 0%, rgba(${rgbaCol.r}, ${rgbaCol.g}, ${rgbaCol.b}, 0.6) 51%, ${this.state.cell.color.hex} 75%)`,
           height: `${CellSize}rem`,
           width: `${CellSize}rem`,
           border: `${borderSize} groove ${borderColor}`,
